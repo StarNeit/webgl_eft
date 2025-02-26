@@ -1,0 +1,92 @@
+html,
+body {
+    height: 100%;
+    color: white;
+}
+
+body {
+    margin: 0;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+button {
+    cursor: pointer;
+}
+
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+#logo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: transparent;
+}
+body.o-start #canvas {
+    cursor: none;
+}
+
+#message {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: Georgia, serif;
+    font-size: 0.9rem;
+    text-align: center;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms;
+}
+body.o-start #message {
+    opacity: 1;
+}
+
+#main-content {
+    position: relative;
+    z-index: 9;
+    min-height: 500vh;
+}
+
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #282c34;
+}
+
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(241, 224, 110, 0.7);
+    transform: scale(0);
+    animation: ripple-animation 0.9s ease-out forwards;
+    opacity: 0.6;
+}
+
+@keyframes ripple-animation {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+.dg.ac {
+    display: none;
+}
