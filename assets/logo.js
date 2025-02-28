@@ -2,6 +2,9 @@ let model;
 
 const logoScene = new THREE.Scene();
 
+const CENTER_X = window.innerWidth / 2;
+const CENTER_Y = window.innerHeight / 2;
+
 // Create Camera
 const logoCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 200);
 logoCamera.position = 5;
@@ -13,20 +16,33 @@ document.getElementById('logo').appendChild(logoRenderer.domElement);
 
 // Create Light
 const ambientLight = new THREE.AmbientLight(0xcccccc, 0.2);
-ambientLight.position.set(0, 0, 10);// Soft white light
+ambientLight.position.set(0, 0, -20);// Soft white light
 logoScene.add(ambientLight);
 
 const pointLight = new THREE.PointLight(0xffffff, 1); // Light with radius
-pointLight.position.set(0, 0, 20);
+pointLight.position.set(0, 8, 30);
 logoScene.add(pointLight);
+
+// const axesHelper = new THREE.AxesHelper(5);
+// logoScene.add(axesHelper);
+//
+// const gridHelper = new THREE.GridHelper(100, 100);
+// logoScene.add(gridHelper);
+
+const pivot = new THREE.Object3D();
+
+logoScene.add(pivot);
 
 const objLoader = new THREE.OBJLoader();
 objLoader.load('assets/SearchDigitalLogo.obj', function (obj) {
-  obj.rotation.set(89.539, 0, 0.019);
-  obj.position.set(-55, -12, 0);
+  obj.rotation.set(0, 0, 0);
   obj.scale.setScalar( 0.04 );
+  const box = new THREE.Box3().setFromObject(obj);
+  const center = box.getCenter(new THREE.Vector3());
+  obj.position.sub(center);
   model = obj;
-  logoScene.add(obj);
+  pivot.add(model);
+  logoScene.add(pivot);
 }, undefined, function (error) {
   console.error(error);
 });
@@ -38,29 +54,26 @@ function animate() {
 }
 animate();
 
-logoCamera.position.set(-3, 0, 100); // Move the logoCamera back a bit
-
-const CAMERA_Z_ZOOM_UNIT = 1;
-const CAMERA_X_POSITION_UNIT = 8.8 / ((100 - 4) / CAMERA_Z_ZOOM_UNIT);
-const CAMERA_Y_POSITION_UNIT = 5 / ((100 - 4) / CAMERA_Z_ZOOM_UNIT);
+logoCamera.position.set(0, 100, 0); // Move the logoCamera back a bit
+logoCamera.lookAt(0,0,0);
+const CAMERA_Y_ZOOM_UNIT = 1;
+const CAMERA_X_POSITION_UNIT = 7 / ((100 - 4) / CAMERA_Y_ZOOM_UNIT);
 
 function cameraZoomIn() {
   const { x, y, z } = logoCamera.position;
 
-  if (x <= 5.8 && y <= 5 && z >= 4) {
+  if (x <= 7 && y >= 1) {
     logoCamera.position.x += CAMERA_X_POSITION_UNIT;
-    logoCamera.position.y += CAMERA_Y_POSITION_UNIT;
-    logoCamera.position.z -= CAMERA_Z_ZOOM_UNIT;
+    logoCamera.position.y -= CAMERA_Y_ZOOM_UNIT;
   }
 }
 
 function cameraZoomOut() {
-  const { x, y, z } = logoCamera.position;
+  const { x, y } = logoCamera.position;
 
-  if (x >= -3 && y >= 0 && z <= 100) {
+  if (x >= 0 && y <= 100) {
     logoCamera.position.x -= CAMERA_X_POSITION_UNIT;
-    logoCamera.position.y -= CAMERA_Y_POSITION_UNIT;
-    logoCamera.position.z += CAMERA_Z_ZOOM_UNIT;
+    logoCamera.position.y += CAMERA_Y_ZOOM_UNIT;
   }
 }
 
@@ -76,4 +89,18 @@ document.addEventListener('scroll', (event) => {
   }
 
   lastScrollTop = currentScrollTop <=0 ? 0 : currentScrollTop;
+});
+
+
+const ROTATE_X_UNIT = 0.32 / CENTER_X;
+const ROTATE_Y_UNIT = 0.26 / CENTER_Y;
+
+document.addEventListener('mousemove', (event) => {
+  if (logoCamera.position.y > 70) {
+    pivot.rotation.z = -((event.offsetX - CENTER_X) * ROTATE_X_UNIT);
+    pivot.rotation.x = ((event.offsetY - CENTER_Y) * ROTATE_Y_UNIT);
+  } else {
+    pivot.rotation.z = 0;
+    pivot.rotation.x = 0;
+  }
 });

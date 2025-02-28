@@ -21,7 +21,6 @@ function createRipple(x, y) {
 let isMousePressed = false;
 let isMouseMoved = false;
 
-// Add event listeners for mouse down, up, and move
 document.getElementById('body').addEventListener('mousedown', (event) => {
   isMousePressed = true;
   createRipple(event.pageX, event.pageY);
@@ -35,7 +34,6 @@ document.getElementById('body').addEventListener('mousedown', (event) => {
   }, 100);
 });
 
-// Listen for mouse movement while the mouse is pressed
 document.getElementById('body').addEventListener('mousemove', (event) => {
   if (isMousePressed) {
     isMouseMoved = true;
