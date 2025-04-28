@@ -16,11 +16,11 @@ document.getElementById('logo').appendChild(logoRenderer.domElement);
 
 // Create Light
 const ambientLight = new THREE.AmbientLight(0xcccccc, 0.2);
-ambientLight.position.set(0, 0, -20);// Soft white light
+ambientLight.position.set(0, 50, 20);// Soft white light
 logoScene.add(ambientLight);
 
 const pointLight = new THREE.PointLight(0xffffff, 1); // Light with radius
-pointLight.position.set(0, 8, 30);
+pointLight.position.set(0, 70, -100);
 logoScene.add(pointLight);
 
 // const axesHelper = new THREE.AxesHelper(5);
@@ -33,10 +33,11 @@ const pivot = new THREE.Object3D();
 
 logoScene.add(pivot);
 
-const objLoader = new THREE.OBJLoader();
-objLoader.load('assets/SearchDigitalLogo.obj', function (obj) {
+const gltfLoader = new THREE.GLTFLoader();
+gltfLoader.load('assets/sd-logo.gltf', function (gltf) {
+  const obj = gltf.scene;
   obj.rotation.set(0, 0, 0);
-  obj.scale.setScalar( 0.04 );
+  obj.scale.setScalar( 150 );
   const box = new THREE.Box3().setFromObject(obj);
   const center = box.getCenter(new THREE.Vector3());
   obj.position.sub(center);
