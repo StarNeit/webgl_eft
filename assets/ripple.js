@@ -5,6 +5,7 @@ function createRipple(x, y) {
   const rippleSize = 80; // you can adjust this value
   ripple.style.width = `${rippleSize}px`;
   ripple.style.height = `${rippleSize}px`;
+  ripple.style.backgroundColor = 'rgba(0, 228, 255, 0.7)'; // Adding cyan color directly
 
   ripple.style.left = `${x - rippleSize / 2}px`; // Centering the ripple
   ripple.style.top = `${y - rippleSize / 2}px`; // Centering the ripple
@@ -32,6 +33,14 @@ document.getElementById('body').addEventListener('mousedown', (event) => {
       clearInterval(continuousRipple);
     }
   }, 100);
+});
+
+// Add click event handler
+document.getElementById('body').addEventListener('click', (event) => {
+  // Create a small random movement to trigger animation
+  const randomX = event.pageX + (Math.random() - 0.5) * 10;
+  const randomY = event.pageY + (Math.random() - 0.5) * 10;
+  createRipple(randomX, randomY);
 });
 
 document.getElementById('body').addEventListener('mousemove', (event) => {

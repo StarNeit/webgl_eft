@@ -45,7 +45,7 @@ body.o-start #canvas {
     right: 0;
     bottom: 0;
     left: 0;
-    color: rgba(255, 255, 255, 0.7);
+    /* color: rgba(255, 255, 255, 0.7); */
     font-family: Georgia, serif;
     font-size: 0.9rem;
     text-align: center;
@@ -74,7 +74,8 @@ body.o-start #message {
 .ripple {
     position: absolute;
     border-radius: 50%;
-    background: rgba(241, 224, 110, 0.7);
+    background: rgba(0, 228, 255, 0.7);
+    /* background: rgba(241, 224, 110, 0.7); */
     transform: scale(0);
     animation: ripple-animation 0.9s ease-out forwards;
     opacity: 0.6;

@@ -31,6 +31,14 @@ let config = {
   SUNRAYS_WEIGHT: 0.5,
 }
 
+const colorPalette = [
+  { r: 0x00/255, g: 0xe4/255, b: 0xff/255 }, // #00e4ff
+  { r: 0x8f/255, g: 0x01/255, b: 0x83/255 }, // #8f0183
+  { r: 0x00/255, g: 0x8b/255, b: 0xcc/255 }, // #008bcc
+  { r: 0xc5/255, g: 0x00/255, b: 0x84/255 }  // #c50084
+];
+let currentColorIndex = 0;
+
 function pointerPrototype () {
   this.id = -1;
   this.texcoordX = 0;
@@ -41,7 +49,13 @@ function pointerPrototype () {
   this.deltaY = 0;
   this.down = false;
   this.moved = false;
-  this.color = [30, 0, 300];
+  const color = colorPalette[currentColorIndex];
+  currentColorIndex = (currentColorIndex + 1) % colorPalette.length;
+  this.color = {
+    r: color.r,
+    g: color.g,
+    b: color.b
+  };
 }
 
 let pointers = [];
@@ -1152,15 +1166,7 @@ function resizeCanvas () {
 }
 
 function updateColors (dt) {
-  if (!config.COLORFUL) return;
-
-  colorUpdateTimer += dt * config.COLOR_UPDATE_SPEED;
-  if (colorUpdateTimer >= 1) {
-    colorUpdateTimer = wrap(colorUpdateTimer, 0, 1);
-    pointers.forEach(p => {
-      p.color = generateColor();
-    });
-  }
+  return;
 }
 
 function applyInputs () {
@@ -1373,15 +1379,17 @@ function splatPointer (pointer) {
 
 function multipleSplats (amount) {
   for (let i = 0; i < amount; i++) {
-    const color = generateColor();
-    color.r *= 10.0;
-    color.g *= 10.0;
-    color.b *= 10.0;
+    const color = colorPalette[currentColorIndex];
+    currentColorIndex = (currentColorIndex + 1) % colorPalette.length;
     const x = Math.random();
     const y = Math.random();
     const dx = 1000 * (Math.random() - 0.5);
     const dy = 1000 * (Math.random() - 0.5);
-    splat(x, y, dx, dy, color);
+    splat(x, y, dx, dy, {
+      r: color.r,
+      g: color.g,
+      b: color.b
+    });
   }
 }
 
@@ -1533,34 +1541,12 @@ function correctDeltaY (delta) {
 }
 
 function generateColor () {
-  let c = HSVtoRGB(Math.random(), 1.0, 1.0);
-  c.r *= 0.15;
-  c.g *= 0.15;
-  c.b *= 0.15;
-  return c;
-}
-
-function HSVtoRGB (h, s, v) {
-  let r, g, b, i, f, p, q, t;
-  i = Math.floor(h * 6);
-  f = h * 6 - i;
-  p = v * (1 - s);
-  q = v * (1 - f * s);
-  t = v * (1 - (1 - f) * s);
-
-  switch (i % 6) {
-    case 0: r = v, g = t, b = p; break;
-    case 1: r = q, g = v, b = p; break;
-    case 2: r = p, g = v, b = t; break;
-    case 3: r = p, g = q, b = v; break;
-    case 4: r = t, g = p, b = v; break;
-    case 5: r = v, g = p, b = q; break;
-  }
-
+  const color = colorPalette[currentColorIndex];
+  currentColorIndex = (currentColorIndex + 1) % colorPalette.length;
   return {
-    r,
-    g,
-    b
+    r: color.r,
+    g: color.g,
+    b: color.b
   };
 }
 
